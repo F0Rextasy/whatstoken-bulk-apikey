@@ -25,6 +25,7 @@
 [![License](https://img.shields.io/badge/license-MIT-6ea8fe?style=for-the-badge)](LICENSE)
 [![Models](https://img.shields.io/badge/models-141%20served-412991?style=for-the-badge)](https://www.whatstoken.ai)
 [![9Router](https://img.shields.io/badge/9Router-connector-8B5CF6?style=for-the-badge)](#-connect-to-9router)
+[![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
 [🛠 Quick start](#-quick-start) · [🎁 Free tier](#-free-tier--how-much-you-get) · [🤖 Models](#-models--all-141-of-them) · [🧪 Use the API](#-how-to-use-the-api) · [✅ Verified](#-verified-working--every-key-is-tested) · [🧭 How it works](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Options](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Issues](#-issues)
@@ -183,6 +184,17 @@ node src/cli.js --connect-9router      # same, from the CLI
 
 Defaults: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Models are served as `whatstoken/<model id>`.
 
+
+## 🔌 Connect to OmniRoute
+
+[OmniRoute](https://omniroute.online) is a self-hosted, OpenAI-compatible router:
+
+```bash
+node src/connect-omniroute.js --base http://localhost:20128 --password 123456
+node src/cli.js --connect-omniroute      # same, from the CLI
+```
+
+Defaults: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Models are served as `whatstoken/<model id>`.
 ## 🔑 What one key gets you
 
 | | |
