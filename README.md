@@ -107,6 +107,11 @@ The launcher asks for the proxy list and count, remembers them in `launcher.conf
 
 ## ✅ Verified working — every key is tested
 
+> **Quality gates.** Every key here passed a live `chat-200` before it was written to `keys.txt`
+> (dead keys are never shipped). Router combos follow the same rule at the model level: an entry is
+> added **only if the model answers `chat-200` and can call tools** — a model without tool support,
+> a dead key or a dead provider is dropped instead of added. Works with **9Router and OmniRoute**.
+
 | Check | Result |
 | --- | --- |
 | `GET /api/v1/settings` | **200** — register on, e-mail registration on, username/mobile off, no captcha, sign-up gift on |
@@ -183,7 +188,6 @@ node src/cli.js --connect-9router      # same, from the CLI
 ```
 
 Defaults: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Models are served as `whatstoken/<model id>`.
-
 
 ## 🔌 Connect to OmniRoute
 
