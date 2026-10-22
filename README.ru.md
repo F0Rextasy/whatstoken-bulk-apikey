@@ -95,6 +95,7 @@ print(c.chat.completions.create(model="deepseek-v4.1-flash-1017",
 cd whatstoken-bulk-apikey
 printf 'socks5://host:port\n' > proxies.txt   # optional — without it the tool runs direct
 node src/launcher.js        # interactive: mint / verify / screen / settings / 9Router
+
 # or: node src/cli.js --count 30 --pool proxies.txt
 ```
 
