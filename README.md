@@ -67,7 +67,7 @@ The public catalogue carries **141 model entries in 88 groups** across 5 categor
 
 | Model ID | Verified |
 | --- | --- |
-| `deepseek-v4.1-flash-1017` | **10 keys chat-200** in `providers/whatstoken/keys.txt`; full sweep from a second network (see the Verified table) |
+| `deepseek-v4.1-flash-1017` | **chat-200** in `providers/whatstoken/keys.txt`; full sweep from a second network (see the Verified table) |
 | `deepseek-v4.1-flash-1017-special` | chat-200 with the same keys (the discounted sibling) |
 
 Upstream answers with the internal id `deepseek-v4-1-flash-261017`, so a router that folds aliases should map both back to the base `deepseek-v4.1-flash` family.
@@ -113,7 +113,7 @@ The launcher asks for the proxy list and count, remembers them in `launcher.conf
 | `POST /api/v1/auth/register-email` | **200** — session token in the same response; `403 当日注册次数已达上限` once that IP has had its daily sign-up |
 | `POST /api/v1/tokens` | **200** — the key comes back as `token_key` (not `key`), unlimited quota |
 | `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — for **every** key before it is written | **200** with real content — the 10-key mint completed at 10/10 |
-| independent re-check — **10/10 keys live** from a different exit (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | all ten keys PASS; the sibling `-special` model also answers 200 |
+| independent re-check — **verified working** from a different exit (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | all ten keys PASS; the sibling `-special` model also answers 200 |
 | panel-side notes | registrations are capped **per IP per day**; a bad/expired code first burns the address (`400 邮箱验证码无效`), not the exit |
 
 ## 🧭 How it works
