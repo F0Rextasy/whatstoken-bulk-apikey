@@ -68,6 +68,7 @@ const crypto = require('crypto');
 const ROOT = path.basename(__dirname) === 'src' ? path.resolve(__dirname, '..') : __dirname;
 const KEYS_FILE = path.join(ROOT, 'keys.txt');
 const ACCOUNTS_FILE = path.join(ROOT, 'accounts.jsonl');
+const DEAD_FILE = path.join(ROOT, 'keys-dead.txt');
 const OUT_DIR = path.join(ROOT, 'out');
 
 const BASE = 'https://www.whatstoken.ai';
@@ -100,6 +101,7 @@ if (has('help') || has('h')) {
   node src/cli.js --help
 
   --count N        accounts to mint                                        [5]
+  --auto           one-command path; the embedded solver is used if the panel has one
   --conc N         accounts in flight (keep it at 1)                       [1]
   --model <id>     model used for the live gate      [deepseek-v4.1-flash-1017]
   --pool <file>    proxy list, one exit per line (env WHATSTOKEN_PROXIES) [optional]
@@ -523,17 +525,21 @@ async function verifyOnly() {
   const keys = readKeys();
   if (!keys.length) { console.log(`no keys in ${KEYS_FILE}`); process.exit(0); }
   let live = 0;
+  const dead = [];
   for (let i = 0; i < keys.length; i++) {
     const exit = exits[i % exits.length];
     try {
       const g = await chatGate(exit, keys[i], MODEL);
       if (g.ok) live++;
+      else dead.push({ key: keys[i], why: `chat ${g.status}` });
       console.log(`  ${g.ok ? '✔' : '✘'} ${keys[i].slice(0, 8)}… chat=${g.status}`);
     } catch (e) {
+      dead.push({ key: keys[i], why: String(e.message).slice(0, 90) });
       console.log(`  ✘ ${keys[i].slice(0, 8)}… ${String(e.message).slice(0, 90)}`);
     }
   }
-  console.log(`verify: ${live}/${keys.length} keys live on ${MODEL}`);
+  fs.writeFileSync(DEAD_FILE, dead.map((d) => `${d.key}\t# ${d.why}`).join('\n') + (dead.length ? '\n' : ''));
+  console.log(`verify: ${live}/${keys.length} keys live on ${MODEL} — ${dead.length} dead in ${DEAD_FILE}`);
   process.exit(live === keys.length ? 0 : 1);
 }
 

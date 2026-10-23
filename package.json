@@ -1,7 +1,7 @@
 {
   "name": "whatstoken-bulk-apikey",
   "version": "1.0.0",
-  "description": "Bulk-create WhatsTokenAI accounts with auto-generated API keys — OpenAI-compatible inference + 9Router connector.",
+  "description": "Bulk-create WhatsTokenAI accounts with auto-generated API keys \u2014 OpenAI-compatible inference + 9Router connector.",
   "license": "MIT",
   "type": "commonjs",
   "bin": {
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "node src/launcher.js",
-    "mint": "node src/cli.js",
+    "mint": "node src/cli.js --auto",
     "9router": "node src/connect-9router.js",
     "omniroute": "node src/connect-omniroute.js"
   },
