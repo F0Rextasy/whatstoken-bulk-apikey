@@ -28,7 +28,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Quick start](#-quick-start) · [🎁 Free tier](#-free-tier--how-much-you-get) · [🤖 Models](#-models--all-141-of-them) · [🧪 Use the API](#-how-to-use-the-api) · [✅ Verified](#-verified-working--every-key-is-tested) · [🧭 How it works](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Options](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Issues](#-issues)
+[🛠 Quick start](#-quick-start) · [🎁 Free tier](#-free-tier--how-much-you-get) · [🤖 Models](#-models--all-141-of-them) · [🧪 Use the API](#-how-to-use-the-api) · [✅ Verified](#-verified-working--every-key-is-tested) · [🧭 How it works](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Options](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Issues](#-issues)
 
 </div>
 
@@ -68,7 +68,7 @@ The public catalogue carries **141 model entries in 88 groups** across 5 categor
 
 | Model ID | Verified |
 | --- | --- |
-| `deepseek-v4.1-flash-1017` | **chat-200** in `providers/whatstoken/keys.txt`; full sweep from a second network (see the Verified table) |
+| `deepseek-v4.1-flash-1017` | **every key, chat-200** in `providers/whatstoken/keys.txt`; full sweep from a second network (see the Verified table) |
 | `deepseek-v4.1-flash-1017-special` | chat-200 with the same keys (the discounted sibling) |
 
 Upstream answers with the internal id `deepseek-v4-1-flash-261017`, so a router that folds aliases should map both back to the base `deepseek-v4.1-flash` family.
@@ -107,11 +107,6 @@ The launcher asks for the proxy list and count, remembers them in `launcher.conf
 
 ## ✅ Verified working — every key is tested
 
-> **Quality gates.** Every key here passed a live `chat-200` before it was written to `keys.txt`
-> (dead keys are never shipped). Router combos follow the same rule at the model level: an entry is
-> added **only if the model answers `chat-200` and can call tools** — a model without tool support,
-> a dead key or a dead provider is dropped instead of added. Works with **9Router and OmniRoute**.
-
 | Check | Result |
 | --- | --- |
 | `GET /api/v1/settings` | **200** — register on, e-mail registration on, username/mobile off, no captcha, sign-up gift on |
@@ -119,8 +114,14 @@ The launcher asks for the proxy list and count, remembers them in `launcher.conf
 | `POST /api/v1/auth/register-email` | **200** — session token in the same response; `403 当日注册次数已达上限` once that IP has had its daily sign-up |
 | `POST /api/v1/tokens` | **200** — the key comes back as `token_key` (not `key`), unlimited quota |
 | `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — for **every** key before it is written | **200** with real content — the 10-key mint completed at 10/10 |
-| independent re-check — **verified working** from a different exit (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | all ten keys PASS; the sibling `-special` model also answers 200 |
+| independent re-check — **every key verified** from a different exit (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | all ten keys PASS; the sibling `-special` model also answers 200 |
 | panel-side notes | registrations are capped **per IP per day**; a bad/expired code first burns the address (`400 邮箱验证码无效`), not the exit |
+
+> **Quality gates.** Every key here passed a live `chat-200` before it was written to `keys.txt`
+> (dead keys are never shipped). Router combos follow the same rule at the model level: an entry is
+> added **only if the model answers `chat-200` and can call tools** — a model without tool support,
+> a dead key or a dead provider is dropped instead of added. Re-run the verify step any time;
+> failures are reported, never hidden.
 
 ## 🧭 How it works
 
@@ -199,6 +200,7 @@ node src/cli.js --connect-omniroute      # same, from the CLI
 ```
 
 Defaults: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Models are served as `whatstoken/<model id>`.
+
 ## 🔑 What one key gets you
 
 | | |

@@ -28,7 +28,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Démarrage rapide](#-quick-start) · [🎁 Offre gratuite](#-free-tier--how-much-you-get) · [🤖 Modèles](#-models--all-141-of-them) · [🧪 Utiliser l'API](#-how-to-use-the-api) · [✅ Vérifié](#-verified-working--every-key-is-tested) · [🧭 Comment ça marche](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Options](#️-cli-options) · [🛰️ Proxys](#️-behind-a-proxy) · [🐞 Problèmes](#-issues)
+[🛠 Démarrage rapide](#-quick-start) · [🎁 Offre gratuite](#-free-tier--how-much-you-get) · [🤖 Modèles](#-models--all-141-of-them) · [🧪 Utiliser l'API](#-how-to-use-the-api) · [✅ Vérifié](#-verified-working--every-key-is-tested) · [🧭 Comment ça marche](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Options](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problèmes](#-issues)
 
 </div>
 
@@ -42,7 +42,7 @@
 
 ## ✨ Pourquoi cet outil existe
 
-WhatsTokenAI est une version TokensByte / tkeapi de new-api derrière un CDN orienté Chine. L'inscription est **sans captcha et uniquement par e-mail** (`enable_username_registration: false`, `enable_email_registration: true`, aucun Turnstile/hCaptcha/Geetest nulle part dans le bundle de la console), le module marketing offre à chaque nouveau compte un **cadeau d'inscription (mesuré à 0,1 USD de `gift_balance`)**, et l'API du panneau répond à un `GET /api/v1/settings` public sur lequel vous pouvez vous baser. L'outil entier a été prouvé de bout en bout en créant **10 comptes → 10 clés vérifiées**, puis en revérifiant les dix depuis un autre réseau.
+WhatsTokenAI est une version TokensByte / tkeapi de new-api derrière un CDN orienté Chine. L'inscription est **sans captcha et uniquement par e-mail** (`enable_username_registration: false`, `enable_email_registration: true`, aucun Turnstile/hCaptcha/Geetest nulle part dans le bundle de la console), le module marketing offre à chaque nouveau compte un **cadeau d'inscription (mesuré à 0,1 USD de `gift_balance`)**, et l'API du panneau répond à un `GET /api/v1/settings` public sur lequel vous pouvez filtrer. L'outil entier a été prouvé de bout en bout en créant **10 comptes → 10 clés vérifiées**, puis en revérifiant les dix depuis un autre réseau.
 
 ## 🎁 Offre gratuite — ce que vous obtenez
 
@@ -53,7 +53,7 @@ WhatsTokenAI est une version TokensByte / tkeapi de new-api derrière un CDN ori
 | Politique d'adresse | partie locale `[A-Za-z0-9_]+` uniquement, domaine en liste blanche, longueur limitée → **gmail est la famille d'adresses qui passe** |
 | Un compte par contact | `409 CONTACT_AT_LIMIT` — les boîtes gmail publiques partagées sont souvent déjà prises |
 | Inscriptions par IP | **1 inscription réussie par IP et par jour** — `403 当日注册次数已达上限` |
-| Renvoi de code | délai par adresse — `400 验证码发送过于频繁，请稍后再试` |
+| Renvoi de code | délai d'attente par adresse — `400 验证码发送过于频繁，请稍后再试` |
 | L'unité qui passe à l'échelle | **un compte = une clé = une sortie** (avec un pool ; une exécution directe en crée une par jour) |
 
 > 💡 L'offre gratuite est définie par WhatsToken et peut changer. Consultez les chiffres en direct sur [www.whatstoken.ai](https://www.whatstoken.ai) — et laissez la propre barrière de l'outil décider :
@@ -62,13 +62,13 @@ WhatsTokenAI est une version TokensByte / tkeapi de new-api derrière un CDN ori
 node src/cli.js --verify-only     # every key in keys.txt is re-tested with a real chat call
 ```
 
-## 🤖 Modèles — les 141 au complet
+## 🤖 Modèles — les 141
 
 Le catalogue public contient **141 entrées de modèles réparties en 88 groupes** sur 5 catégories (chat / image / vidéo / audio / amélioration vidéo). La ligne de clé vérifiée est la famille flash de DeepSeek :
 
 | ID du modèle | Vérifié |
 | --- | --- |
-| `deepseek-v4.1-flash-1017` | **10 clés chat-200** dans `providers/whatstoken/keys.txt` ; balayage complet depuis un second réseau (voir le tableau Vérifié) |
+| `deepseek-v4.1-flash-1017` | **chaque clé, chat-200** dans `providers/whatstoken/keys.txt` ; balayage complet depuis un second réseau (voir le tableau Vérifié) |
 | `deepseek-v4.1-flash-1017-special` | chat-200 avec les mêmes clés (le frère à tarif réduit) |
 
 L'amont répond avec l'id interne `deepseek-v4-1-flash-261017`, donc un routeur qui fusionne les alias devrait ramener les deux vers la famille de base `deepseek-v4.1-flash`.
@@ -81,7 +81,7 @@ curl https://www.whatstoken.ai/v1/chat/completions \
 
 ## 🧪 Comment utiliser l'API
 
-URL de base **`https://www.whatstoken.ai/v1`** — compatible OpenAI. L'apex `whatstoken.ai` ne fait que rediriger (`301`) et `api.whatstoken.ai` ne résout pas, donc gardez l'hôte `www` dans votre client.
+URL de base **`https://www.whatstoken.ai/v1`** — compatible OpenAI. L'apex `whatstoken.ai` ne fait que rediriger (`301`) et `api.whatstoken.ai` ne se résout pas, donc gardez l'hôte `www` dans votre client.
 
 ```python
 from openai import OpenAI
@@ -104,19 +104,25 @@ Une clé n'est écrite dans `keys.txt` **qu'après** que `/v1/chat/completions` 
 
 ### 🖱️ Le lanceur
 
-Le lanceur demande la liste de proxys et le nombre, les mémorise dans `launcher.config.json`, et exécute le CLI — créer, vérifier, tester les sorties, paramètres, aide, Connect to 9Router.
+Le lanceur demande la liste de proxies et le nombre, les mémorise dans `launcher.config.json`, et exécute le CLI — création, vérification, test des sorties, paramètres, aide, Connexion à 9Router.
 
-## ✅ Vérifié et fonctionnel — chaque clé est testée
+## ✅ Vérifié fonctionnel — chaque clé est testée
 
 | Vérification | Résultat |
 | --- | --- |
 | `GET /api/v1/settings` | **200** — inscription activée, inscription par e-mail activée, nom d'utilisateur/mobile désactivés, aucun captcha, cadeau d'inscription activé |
 | `POST /api/v1/auth/send-code` | **200** — le panneau envoie `【WhatsToken.AI】注册验证码` depuis `noreply@<panel-mail>` en ~5–10 s (durée de vie 5 minutes) |
 | `POST /api/v1/auth/register-email` | **200** — jeton de session dans la même réponse ; `403 当日注册次数已达上限` une fois que cette IP a eu son inscription quotidienne |
-| `POST /api/v1/tokens` | **200** — la clé revient sous `token_key` (et non `key`), quota illimité |
-| `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — pour **chaque** clé avant son écriture | **200** avec du contenu réel — la création des 10 clés s'est terminée à 10/10 |
-| revérification indépendante — **10/10 clés actives** depuis une autre sortie (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | les dix clés PASSENT ; le modèle frère `-special` répond aussi 200 |
+| `POST /api/v1/tokens` | **200** — la clé revient sous `token_key` (pas `key`), quota illimité |
+| `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — pour **chaque** clé avant qu'elle ne soit écrite | **200** avec du contenu réel — la création des 10 clés s'est terminée à 10/10 |
+| revérification indépendante — **chaque clé vérifiée** depuis une sortie différente (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | les dix clés PASSENT ; le modèle frère `-special` répond aussi 200 |
 | notes côté panneau | les inscriptions sont plafonnées **par IP et par jour** ; un code erroné/expiré brûle d'abord l'adresse (`400 邮箱验证码无效`), pas la sortie |
+
+> **Barrières de qualité.** Chaque clé ici a passé un `chat-200` en direct avant d'être écrite dans `keys.txt`
+> (les clés mortes ne sont jamais livrées). Les combos de routeur suivent la même règle au niveau du modèle : une entrée n'est
+> ajoutée **que si le modèle répond `chat-200` et peut appeler des outils** — un modèle sans prise en charge des outils,
+> une clé morte ou un fournisseur mort est écarté au lieu d'être ajouté. Relancez l'étape de vérification à tout moment ;
+> les échecs sont signalés, jamais cachés.
 
 ## 🧭 Comment ça marche
 
@@ -131,10 +137,10 @@ inbox (one address per account)                                  a fresh address
 
 | Étape | Appel | Notes |
 | --- | --- | --- |
-| barrières | `GET /api/v1/settings` | interrupteurs d'inscription/marketing, sans auth |
+| barrières | `GET /api/v1/settings` | interrupteurs d'inscription/marketing, sans authentification |
 | boîte mail | Emailnator `POST /api/generate-email` | un nouveau @gmail.com par compte, enregistré sous la forme sans point |
-| envoi du code | `POST /api/v1/auth/send-code` `{email, purpose:'register'}` | le délai répond `验证码发送过于频繁` |
-| lecture du code | Emailnator `/api/message-list` → `/api/message/<id>` | d'abord la marque (`WhatsToken`/`reanimai`), puis une arrivée en forme de code depuis l'instantané |
+| envoi du code | `POST /api/v1/auth/send-code` `{email, purpose:'register'}` | le délai d'attente répond `验证码发送过于频繁` |
+| lecture du code | Emailnator `/api/message-list` → `/api/message/<id>` | marque d'abord (`WhatsToken`/`reanimai`), puis une arrivée en forme de code depuis l'instantané |
 | inscription | `POST /api/v1/auth/register-email` `{email, code, password, timezone}` | `409 CONTACT_AT_LIMIT` → nouvelle adresse, même sortie ; `403 当日注册次数已达上限` → sortie suivante |
 | clé | `POST /api/v1/tokens` | quota illimité ; champ de réponse `token_key` |
 | preuve | `POST /v1/chat/completions` | 200 avec contenu/contenu de raisonnement = la clé est active |
@@ -155,14 +161,14 @@ node src/cli.js --help
 | `WHATSTOKEN_PROXIES` | `proxies.txt` | pool de sorties, une ligne par proxy |
 | `WHATSTOKEN_TIMEZONE` | `Asia/Singapore` | `timezone` envoyé à l'appel d'inscription |
 
-Le CLI conserve `--conc` par souci d'exhaustivité mais vaut **1** par défaut : l'inscription est plafonnée par IP et par jour, donc des comptes en parallèle ne font que se disputer le même quota.
+Le CLI conserve `--conc` par souci d'exhaustivité mais vaut **1** par défaut : l'inscription est plafonnée par IP et par jour, donc les comptes parallèles ne font que se disputer le même quota.
 
 ## 🛰️ Derrière un proxy
 
 **Facultatif — mais le fournisseur le rend presque obligatoire à toute échelle.** L'outil fonctionne aussi sans proxy.
 
-- **Avec un pool :** passez `--pool <file>` (ou définissez `WHATSTOKEN_PROXIES`) et chaque requête pour un compte — envoi de code, inscription, portefeuille, clé, chat-200 — passe par une sortie épinglée de cette liste, de sorte que le code n'est jamais émis par une adresse et utilisé par une autre. Une sortie défaillante déplace la tentative vers la suivante ; une sortie qui renvoie `403 当日注册次数已达上限` est brûlée pour le reste de l'exécution. Avec un pool, l'exécution est **fail-closed** : si aucune sortie n'atteint le panneau, l'exécution échoue au lieu de laisser fuir une requête depuis votre propre adresse.
-- **Sans pool :** le CLI affiche `running WITHOUT a proxy (direct)` et se connecte directement — et la règle d'une inscription par IP et par jour de WhatsTokenAI signifie qu'une exécution directe crée **une** clé.
+- **Avec un pool :** passez `--pool <file>` (ou définissez `WHATSTOKEN_PROXIES`) et chaque requête pour un compte — envoi de code, inscription, portefeuille, clé, chat-200 — passe par une sortie épinglée de cette liste, de sorte que le code n'est jamais émis par une adresse et utilisé par une autre. Une sortie défaillante déplace la tentative vers la suivante ; une sortie qui renvoie `403 当日注册次数已达上限` est brûlée pour le reste de l'exécution. Avec un pool, l'exécution est **fail-closed** : si aucune sortie n'atteint le panneau, l'exécution échoue au lieu de laisser fuiter une requête depuis votre propre adresse.
+- **Sans pool :** le CLI affiche `running WITHOUT a proxy (direct)` et se connecte directement — et alors la règle de WhatsTokenAI d'une inscription par IP et par jour signifie qu'une exécution directe crée **une** clé.
 - Lancez `--screen` dans l'un ou l'autre mode : il teste les sorties dont vous disposez (ou la route directe) contre `GET /api/v1/settings` avant une exécution réelle.
 
 ## 📄 Fichiers
@@ -172,7 +178,7 @@ Le CLI conserve `--conc` par souci d'exhaustivité mais vaut **1** par défaut :
 | `keys.txt` | une clé vérifiée en direct par ligne — ignoré par git |
 | `accounts.jsonl` | e-mail / mot de passe / uid / id de jeton / solde cadeau / sortie / modèle / barrière — ignoré par git |
 | `proxies.txt` | vos sorties — ignoré par git |
-| `out/` | journaux d'exécution — ignoré par git |
+| `out/` | journaux d'exécution — ignorés par git |
 
 ## 🔌 Connexion à 9Router
 
@@ -183,7 +189,7 @@ node src/connect-9router.js --base http://localhost:20128 --password 123456
 node src/cli.js --connect-9router      # same, from the CLI
 ```
 
-Valeurs par défaut : `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Les modèles sont servis sous `whatstoken/<model id>`.
+Défauts : `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Les modèles sont servis sous `whatstoken/<model id>`.
 
 ## 🔌 Connexion à OmniRoute
 
@@ -194,20 +200,21 @@ node src/connect-omniroute.js --base http://localhost:20128 --password 123456
 node src/cli.js --connect-omniroute      # same, from the CLI
 ```
 
-Valeurs par défaut : `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Les modèles sont servis sous `whatstoken/<model id>`.
+Défauts : `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Les modèles sont servis sous `whatstoken/<model id>`.
+
 ## 🔑 Ce qu'une clé vous apporte
 
 | | |
 | --- | --- |
 | 🏢 Fournisseur | **WhatsTokenAI** — [whatstoken.ai](https://www.whatstoken.ai) |
 | 🎁 Ce que le fournisseur offre | 0,1 $ de `gift_balance` à l'inscription (inscription par e-mail sans captcha) |
-| 🔑 Ce qu'une clé vous apporte | une clé sur son propre compte, vérifiée par chat sur `deepseek-v4.1-flash-1017` |
+| 🔑 Ce qu'une clé vous apporte | une clé sur son propre compte, vérifiée en chat sur `deepseek-v4.1-flash-1017` |
 | 🌐 Forme de l'API | compatible OpenAI : `POST https://www.whatstoken.ai/v1/chat/completions` |
 | 🔒 Vos données | seuls `www.whatstoken.ai` et votre backend de boîte mail sont contactés |
 
 ## 🐞 Problèmes
 
-Si WhatsTokenAI modifie ses barrières d'inscription, sa politique d'adresses ou le cadeau d'inscription, l'outil s'arrête à cette étape et indique laquelle. **[Ouvrez un ticket](../../issues)** avec la commande et la sortie exacte.
+Si WhatsTokenAI modifie ses barrières d'inscription, sa politique d'adresse ou le cadeau d'inscription, l'outil s'arrête à cette étape et indique laquelle. **[Ouvrez un ticket](../../issues)** avec la commande et la sortie exacte.
 
 ## 📄 Licence
 

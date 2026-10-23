@@ -18,7 +18,7 @@
 
 # whatstoken-bulk-apikey
 
-**Otomatik oluşturulan API anahtarlarıyla toplu WhatsTokenAI hesabı açın — OpenAI uyumlu çıkarım + 9Router bağlayıcısı.**
+**WhatsTokenAI hesaplarını otomatik oluşturulan API anahtarlarıyla toplu oluşturun — OpenAI uyumlu çıkarım + 9Router bağlayıcısı.**
 
 [![Node](https://img.shields.io/badge/Node-%E2%89%A518-3DA639?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-blue?style=for-the-badge)](#)
@@ -28,7 +28,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-141-of-them) · [🧪 API'yi kullanma](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
+[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-141-of-them) · [🧪 API'yi kullanın](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
 
 </div>
 
@@ -42,7 +42,7 @@
 
 ## ✨ Bu neden var
 
-WhatsTokenAI, Çin'e yönelik bir CDN arkasındaki new-api'nin TokensByte / tkeapi sürümüdür. Kayıt **captcha'sız ve yalnızca e-posta iledir** (`enable_username_registration: false`, `enable_email_registration: true`, konsol paketinde hiçbir yerde Turnstile/hCaptcha/Geetest yok), pazarlama modülü her yeni hesaba bir **kayıt hediyesi (ölçülen 0.1 USD `gift_balance`)** verir ve panel API'si, üzerine kapı koyabileceğiniz herkese açık bir `GET /api/v1/settings` yanıtlar. Tüm araç uçtan uca kanıtlandı: **10 hesap → 10 doğrulanmış anahtar** üretildi, ardından onun tamamı farklı bir ağdan yeniden kanıtlandı.
+WhatsTokenAI, Çin'e yönelik bir CDN arkasındaki new-api'nin TokensByte / tkeapi derlemesidir. Kayıt **captcha'sız ve yalnızca e-posta iledir** (`enable_username_registration: false`, `enable_email_registration: true`, konsol paketinde hiçbir yerde Turnstile/hCaptcha/Geetest yok), pazarlama modülü her yeni hesaba bir **kayıt hediyesi (ölçülen 0.1 USD `gift_balance`)** verir ve panel API'si üzerine kapı koyabileceğiniz herkese açık bir `GET /api/v1/settings` yanıtlar. Tüm araç uçtan uca kanıtlandı: **10 hesap → 10 doğrulanmış anahtar** oluşturuldu, ardından onun tamamı farklı bir ağdan yeniden kanıtlandı.
 
 ## 🎁 Ücretsiz katman — ne kadar alıyorsunuz
 
@@ -51,10 +51,10 @@ WhatsTokenAI, Çin'e yönelik bir CDN arkasındaki new-api'nin TokensByte / tkea
 | Kayıt hediyesi | **hesap başına 0.1 USD `gift_balance`** (`balance 0.0`; `marketing.enable_registration_gift: true`, `invite_reward_invitee: 0.1`) |
 | Kayıt kapısı | e-posta + 6 haneli kod — **captcha yok**; kullanıcı adı ve mobil kayıt kapalı |
 | Adres politikası | yerel kısım yalnızca `[A-Za-z0-9_]+`, beyaz listeye alınmış alan adı, uzunluk sınırı → **geçen adres ailesi gmail'dir** |
-| Kişi başına bir hesap | `409 CONTACT_AT_LIMIT` — paylaşılan genel gmail kutuları çoğu zaman zaten alınmıştır |
+| Kişi başına bir hesap | `409 CONTACT_AT_LIMIT` — paylaşılan genel gmail kutuları genellikle zaten alınmış olur |
 | IP başına kayıt | **IP başına günde 1 başarılı kayıt** — `403 当日注册次数已达上限` |
-| Kod yeniden gönderimi | adres başına bekleme süresi — `400 验证码发送过于频繁，请稍后再试` |
-| Ölçeklenen birim | **bir hesap = bir anahtar = bir çıkış** (bir havuzla; doğrudan çalıştırma günde bir tane üretir) |
+| Kod yeniden gönderme | adres başına bekleme süresi — `400 验证码发送过于频繁，请稍后再试` |
+| Ölçeklenen birim | **bir hesap = bir anahtar = bir çıkış** (bir havuzla; doğrudan çalıştırma günde bir tane oluşturur) |
 
 > 💡 Ücretsiz katman WhatsToken tarafından belirlenir ve değişebilir. Güncel sayıları [www.whatstoken.ai](https://www.whatstoken.ai) adresinden kontrol edin — ve kararı aracın kendi kapısına bırakın:
 
@@ -68,10 +68,10 @@ Herkese açık katalog, 5 kategoride (chat / image / video / audio / video-enhan
 
 | Model Kimliği | Doğrulandı |
 | --- | --- |
-| `deepseek-v4.1-flash-1017` | `providers/whatstoken/keys.txt` içinde **10 anahtar chat-200**; ikinci bir ağdan tam tarama (Doğrulandı tablosuna bakın) |
+| `deepseek-v4.1-flash-1017` | `providers/whatstoken/keys.txt` içindeki **her anahtar, chat-200**; ikinci bir ağdan tam tarama (Doğrulanmış tabloya bakın) |
 | `deepseek-v4.1-flash-1017-special` | aynı anahtarlarla chat-200 (indirimli kardeş model) |
 
-Upstream, dahili `deepseek-v4-1-flash-261017` kimliğiyle yanıt verir; dolayısıyla takma adları birleştiren bir yönlendirici her ikisini de temel `deepseek-v4.1-flash` ailesine eşlemelidir.
+Upstream, dahili `deepseek-v4-1-flash-261017` kimliğiyle yanıt verir; bu nedenle takma adları birleştiren bir yönlendirici her ikisini de temel `deepseek-v4.1-flash` ailesine eşlemelidir.
 
 ```bash
 curl https://www.whatstoken.ai/v1/chat/completions \
@@ -81,7 +81,7 @@ curl https://www.whatstoken.ai/v1/chat/completions \
 
 ## 🧪 API nasıl kullanılır
 
-Temel URL **`https://www.whatstoken.ai/v1`** — OpenAI uyumlu. Apex `whatstoken.ai` yalnızca yönlendirir (`301`) ve `api.whatstoken.ai` çözümlenmez, bu yüzden istemcinizde `www` ana bilgisayarını koruyun.
+Temel URL **`https://www.whatstoken.ai/v1`** — OpenAI uyumlu. Apex `whatstoken.ai` yalnızca yönlendirir (`301`) ve `api.whatstoken.ai` çözümlenmez, bu nedenle istemcinizde `www` ana bilgisayarını koruyun.
 
 ```python
 from openai import OpenAI
@@ -100,23 +100,29 @@ node src/launcher.js        # interactive: mint / verify / screen / settings / 9
 # or: node src/cli.js --count 30 --pool proxies.txt
 ```
 
-Bir anahtar `keys.txt` dosyasına **yalnızca** `/v1/chat/completions` gerçek içerik veya akıl yürütme içeriğiyle 200 yanıt verdikten sonra yazılır; `accounts.jsonl` e-posta / parola / uid / token kimliği / hediye bakiyesi / çıkış / model bilgilerini saklar ve reddedilen denemeler gerekçelerini korur.
+Bir anahtar `keys.txt` dosyasına **yalnızca** `/v1/chat/completions` gerçek içerik veya akıl yürütme içeriğiyle 200 yanıt verdikten sonra yazılır; `accounts.jsonl` e-posta / parola / uid / token kimliği / hediye bakiyesi / çıkış / model bilgilerini tutar ve reddedilen denemeler nedenlerini korur.
 
 ### 🖱️ Başlatıcı
 
-Başlatıcı, proxy listesini ve sayıyı sorar, bunları `launcher.config.json` içinde hatırlar ve CLI'yi çalıştırır — üret, doğrula, çıkışları tara, ayarlar, yardım, 9Router'a Bağlan.
+Başlatıcı proxy listesini ve sayıyı sorar, bunları `launcher.config.json` içinde hatırlar ve CLI'yi çalıştırır — oluştur, doğrula, çıkışları tara, ayarlar, yardım, 9Router'a Bağlan.
 
 ## ✅ Çalıştığı doğrulandı — her anahtar test edilir
 
 | Kontrol | Sonuç |
 | --- | --- |
 | `GET /api/v1/settings` | **200** — kayıt açık, e-posta kaydı açık, kullanıcı adı/mobil kapalı, captcha yok, kayıt hediyesi açık |
-| `POST /api/v1/auth/send-code` | **200** — panel, `noreply@<panel-mail>` adresinden ~5–10 sn içinde `【WhatsToken.AI】注册验证码` gönderir (5 dakika ömür) |
+| `POST /api/v1/auth/send-code` | **200** — panel `noreply@<panel-mail>` adresinden ~5–10 s içinde `【WhatsToken.AI】注册验证码` gönderir (5 dakika ömür) |
 | `POST /api/v1/auth/register-email` | **200** — oturum token'ı aynı yanıtta; o IP günlük kaydını yaptıktan sonra `403 当日注册次数已达上限` |
 | `POST /api/v1/tokens` | **200** — anahtar `token_key` olarak döner (`key` değil), sınırsız kota |
-| `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — yazılmadan önce **her** anahtar için | gerçek içerikle **200** — 10 anahtarlık üretim 10/10 ile tamamlandı |
-| bağımsız yeniden kontrol — farklı bir çıkıştan **10/10 anahtar canlı** (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | on anahtarın tamamı PASS; kardeş `-special` modeli de 200 yanıt verir |
+| `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — yazılmadan önce **her** anahtar için | gerçek içerikle **200** — 10 anahtarlık oluşturma 10/10 ile tamamlandı |
+| bağımsız yeniden kontrol — farklı bir çıkıştan **her anahtar doğrulandı** (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | on anahtarın tamamı PASS; kardeş `-special` modeli de 200 yanıtlıyor |
 | panel tarafı notlar | kayıtlar **IP başına günlük** sınırlıdır; hatalı/süresi geçmiş kod önce adresi yakar (`400 邮箱验证码无效`), çıkışı değil |
+
+> **Kalite kapıları.** Buradaki her anahtar `keys.txt` dosyasına yazılmadan önce canlı bir `chat-200` geçti
+> (ölü anahtarlar asla gönderilmez). Yönlendirici kombinasyonları model düzeyinde aynı kuralı izler: bir girdi
+> **yalnızca model `chat-200` yanıtlıyorsa ve araçları çağırabiliyorsa** eklenir — araç desteği olmayan bir model,
+> ölü bir anahtar veya ölü bir sağlayıcı eklenmek yerine çıkarılır. Doğrulama adımını istediğiniz zaman yeniden çalıştırın;
+> başarısızlıklar bildirilir, asla gizlenmez.
 
 ## 🧭 Nasıl çalışır
 
@@ -133,9 +139,9 @@ inbox (one address per account)                                  a fresh address
 | --- | --- | --- |
 | kapılar | `GET /api/v1/settings` | kayıt/pazarlama anahtarları, kimlik doğrulama yok |
 | posta kutusu | Emailnator `POST /api/generate-email` | hesap başına bir taze @gmail.com, noktasız biçimde kaydedilir |
-| kod gönder | `POST /api/v1/auth/send-code` `{email, purpose:'register'}` | bekleme süresi `验证码发送过于频繁` yanıtı verir |
+| kod gönder | `POST /api/v1/auth/send-code` `{email, purpose:'register'}` | bekleme süresi `验证码发送过于频繁` yanıtlar |
 | kodu oku | Emailnator `/api/message-list` → `/api/message/<id>` | önce marka (`WhatsToken`/`reanimai`), sonra anlık görüntüden kod biçimli bir geliş |
-| kaydol | `POST /api/v1/auth/register-email` `{email, code, password, timezone}` | `409 CONTACT_AT_LIMIT` → yeni adres, aynı çıkış; `403 当日注册次数已达上限` → sonraki çıkış |
+| kayıt ol | `POST /api/v1/auth/register-email` `{email, code, password, timezone}` | `409 CONTACT_AT_LIMIT` → yeni adres, aynı çıkış; `403 当日注册次数已达上限` → sonraki çıkış |
 | anahtar | `POST /api/v1/tokens` | sınırsız kota; yanıt alanı `token_key` |
 | kanıt | `POST /v1/chat/completions` | içerik/akıl yürütme içeriğiyle 200 = anahtar canlı |
 
@@ -152,18 +158,18 @@ node src/cli.js --help
 
 | Ortam değişkeni | Varsayılan | Anlamı |
 | --- | --- | --- |
-| `WHATSTOKEN_PROXIES` | `proxies.txt` | çıkış havuzu, her satırda bir proxy |
+| `WHATSTOKEN_PROXIES` | `proxies.txt` | çıkış havuzu, proxy başına bir satır |
 | `WHATSTOKEN_TIMEZONE` | `Asia/Singapore` | kayıt çağrısına gönderilen `timezone` |
 
-CLI, eksiksizlik için `--conc` seçeneğini korur ancak varsayılan olarak **1** kullanır: kayıt IP başına günlük sınırlıdır, bu yüzden paralel hesaplar yalnızca aynı kota için yarışır.
+CLI, bütünlük için `--conc` seçeneğini korur ancak varsayılan olarak **1** kullanır: kayıt IP başına günlük sınırlıdır, bu nedenle paralel hesaplar yalnızca aynı kota için yarışır.
 
 ## 🛰️ Proxy arkasında
 
-**İsteğe bağlı — ancak sağlayıcı bunu her ölçekte neredeyse zorunlu kılar.** Araç proxy olmadan da çalışır.
+**İsteğe bağlı — ancak sağlayıcı bunu herhangi bir ölçekte neredeyse zorunlu kılar.** Araç proxy olmadan da çalışır.
 
-- **Bir havuzla:** `--pool <file>` geçin (veya `WHATSTOKEN_PROXIES` ayarlayın) ve bir hesap için her istek — send-code, register, wallet, key, chat-200 — bu listeden sabitlenmiş tek bir çıkıştan geçer, böylece kod bir adres tarafından verilip başka bir adres tarafından kullanılmaz. Başarısız bir çıkış denemeyi bir sonrakine taşır; `403 当日注册次数已达上限` bildiren bir çıkış, çalıştırmanın geri kalanı için yakılır. Bir havuzla çalıştırma **fail-closed**'dur: hiçbir çıkış panele ulaşamazsa, kendi adresinizden bir istek sızdırmak yerine çalıştırma başarısız olur.
-- **Havuz olmadan:** CLI `running WITHOUT a proxy (direct)` yazdırır ve doğrudan bağlanır — ve ardından WhatsTokenAI'nin IP başına günde bir kayıt kuralı, doğrudan bir çalıştırmanın **bir** anahtar üretmesi anlamına gelir.
-- `--screen` komutunu her iki moda karşı çalıştırın: gerçek bir çalıştırmadan önce sahip olduğunuz çıkışları (veya doğrudan rotayı) `GET /api/v1/settings` karşısında test eder.
+- **Bir havuzla:** `--pool <file>` geçin (veya `WHATSTOKEN_PROXIES` ayarlayın) ve bir hesap için her istek — send-code, register, wallet, key, chat-200 — bu listeden sabitlenmiş tek bir çıkıştan geçer, böylece kod bir adres tarafından verilip başka bir adres tarafından kullanılmaz. Başarısız bir çıkış denemeyi bir sonrakine taşır; `403 当日注册次数已达上限` bildiren bir çıkış, çalıştırmanın geri kalanı için yakılır. Bir havuzla çalıştırma **fail-closed**'dur: hiçbir çıkış panele ulaşamazsa, çalıştırma kendi adresinizden bir istek sızdırmak yerine başarısız olur.
+- **Havuz olmadan:** CLI `running WITHOUT a proxy (direct)` yazdırır ve doğrudan bağlanır — ve ardından WhatsTokenAI'nin IP başına günde bir kayıt kuralı, doğrudan bir çalıştırmanın **bir** anahtar oluşturması anlamına gelir.
+- Her iki moda karşı `--screen` çalıştırın: gerçek bir çalıştırmadan önce sahip olduğunuz çıkışları (veya doğrudan rotayı) `GET /api/v1/settings` karşısında test eder.
 
 ## 📄 Dosyalar
 
@@ -176,7 +182,7 @@ CLI, eksiksizlik için `--conc` seçeneğini korur ancak varsayılan olarak **1*
 
 ## 🔌 9Router'a bağlan
 
-[9Router](https://9router.com) kendi sunucunuzda barındırılan, OpenAI uyumlu bir yönlendiricidir:
+[9Router](https://9router.com) kendi kendine barındırılan, OpenAI uyumlu bir yönlendiricidir:
 
 ```bash
 node src/connect-9router.js --base http://localhost:20128 --password 123456
@@ -187,7 +193,7 @@ Varsayılanlar: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`
 
 ## 🔌 OmniRoute'a bağlan
 
-[OmniRoute](https://omniroute.online) kendi sunucunuzda barındırılan, OpenAI uyumlu bir yönlendiricidir:
+[OmniRoute](https://omniroute.online) kendi kendine barındırılan, OpenAI uyumlu bir yönlendiricidir:
 
 ```bash
 node src/connect-omniroute.js --base http://localhost:20128 --password 123456
@@ -195,13 +201,14 @@ node src/cli.js --connect-omniroute      # same, from the CLI
 ```
 
 Varsayılanlar: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Modeller `whatstoken/<model id>` olarak sunulur.
+
 ## 🔑 Bir anahtar size ne kazandırır
 
 | | |
 | --- | --- |
 | 🏢 Sağlayıcı | **WhatsTokenAI** — [whatstoken.ai](https://www.whatstoken.ai) |
 | 🎁 Sağlayıcının verdikleri | kayıtta $0.1 `gift_balance` (captcha'sız e-posta kaydı) |
-| 🔑 Bir anahtar size ne kazandırır | kendi hesabında bir anahtar, `deepseek-v4.1-flash-1017` üzerinde chat ile doğrulanmış |
+| 🔑 Bir anahtarın size kazandırdıkları | kendi hesabında bir anahtar, `deepseek-v4.1-flash-1017` üzerinde chat ile doğrulanmış |
 | 🌐 API biçimi | OpenAI uyumlu: `POST https://www.whatstoken.ai/v1/chat/completions` |
 | 🔒 Verileriniz | yalnızca `www.whatstoken.ai` ve gelen kutunuzun arka ucuyla iletişim kurulur |
 
@@ -215,6 +222,6 @@ MIT © 2026 — bkz. [LICENSE](LICENSE).
 
 <div align="center">
 
-**[MIT](LICENSE)** © 2026 whatstoken-bulk-apikey contributors
+**[MIT](LICENSE)** © 2026 whatstoken-bulk-apikey katkıda bulunanlar
 
 </div>

@@ -18,7 +18,7 @@
 
 # whatstoken-bulk-apikey
 
-**WhatsTokenAI-Konten in großen Mengen erstellen mit automatisch generierten API-Schlüsseln — OpenAI-kompatible Inferenz + 9Router-Connector.**
+**Massenhaft WhatsTokenAI-Konten mit automatisch generierten API-Schlüsseln erstellen — OpenAI-kompatible Inferenz + 9Router-Konnektor.**
 
 [![Node](https://img.shields.io/badge/Node-%E2%89%A518-3DA639?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-blue?style=for-the-badge)](#)
@@ -28,7 +28,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Schnellstart](#-quick-start) · [🎁 Kostenlose Stufe](#-free-tier--how-much-you-get) · [🤖 Modelle](#-models--all-141-of-them) · [🧪 Die API verwenden](#-how-to-use-the-api) · [✅ Verifiziert](#-verified-working--every-key-is-tested) · [🧭 So funktioniert es](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Optionen](#️-cli-options) · [🛰️ Proxys](#️-behind-a-proxy) · [🐞 Probleme](#-issues)
+[🛠 Schnellstart](#-quick-start) · [🎁 Kostenlose Stufe](#-free-tier--how-much-you-get) · [🤖 Modelle](#-models--all-141-of-them) · [🧪 Die API verwenden](#-how-to-use-the-api) · [✅ Verifiziert](#-verified-working--every-key-is-tested) · [🧭 So funktioniert es](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Optionen](#️-cli-options) · [🛰️ Proxys](#️-behind-a-proxy) · [🐞 Probleme](#-issues)
 
 </div>
 
@@ -42,16 +42,16 @@
 
 ## ✨ Warum es das gibt
 
-WhatsTokenAI ist ein TokensByte-/tkeapi-Build von new-api hinter einem CDN für China. Die Registrierung ist **captcha-frei und nur per E-Mail** (`enable_username_registration: false`, `enable_email_registration: true`, kein Turnstile/hCaptcha/Geetest irgendwo im Console-Bundle), das Marketing-Modul überreicht jedem neuen Konto ein **Anmeldegeschenk (gemessen 0,1 USD `gift_balance`)**, und die Panel-API beantwortet ein öffentliches `GET /api/v1/settings`, auf das du dich stützen kannst. Das gesamte Tool wurde Ende-zu-Ende bewiesen, indem **10 Konten → 10 verifizierte Schlüssel** erzeugt wurden, und dann alle zehn aus einem anderen Netzwerk erneut bewiesen.
+WhatsTokenAI ist ein TokensByte-/tkeapi-Build von new-api hinter einem CDN für den chinesischen Markt. Die Registrierung ist **captcha-frei und nur per E-Mail** (`enable_username_registration: false`, `enable_email_registration: true`, kein Turnstile/hCaptcha/Geetest irgendwo im Konsolen-Bundle), das Marketing-Modul schenkt jedem neuen Konto ein **Anmeldegeschenk (gemessen 0,1 USD `gift_balance`)**, und die Panel-API beantwortet ein öffentliches `GET /api/v1/settings`, auf das du dich stützen kannst. Das gesamte Tool wurde Ende-zu-Ende bewiesen, indem **10 Konten → 10 verifizierte Schlüssel** erzeugt wurden, und anschließend wurden alle zehn aus einem anderen Netzwerk erneut bestätigt.
 
 ## 🎁 Kostenlose Stufe — wie viel du bekommst
 
 | Was | Wert |
 | --- | --- |
 | Anmeldegeschenk | **0,1 USD `gift_balance` pro Konto** (`balance 0.0`; `marketing.enable_registration_gift: true`, `invite_reward_invitee: 0.1`) |
-| Registrierungs-Gate | E-Mail + 6-stelliger Code — **kein Captcha**; Benutzername- und Mobilfunk-Registrierung sind abgeschaltet |
+| Anmelde-Gate | E-Mail + 6-stelliger Code — **kein Captcha**; Benutzername- und Mobilfunk-Registrierung sind deaktiviert |
 | Adressrichtlinie | lokaler Teil nur `[A-Za-z0-9_]+`, Domain auf Whitelist, Längenbegrenzung → **gmail ist die Adressfamilie, die durchkommt** |
-| Ein Konto pro Kontakt | `409 CONTACT_AT_LIMIT` — die geteilten öffentlichen gmail-Postfächer sind oft schon belegt |
+| Ein Konto pro Kontakt | `409 CONTACT_AT_LIMIT` — die geteilten öffentlichen Gmail-Postfächer sind oft schon belegt |
 | Registrierungen pro IP | **1 erfolgreiche Anmeldung pro IP pro Tag** — `403 当日注册次数已达上限` |
 | Code erneut senden | Cooldown pro Adresse — `400 验证码发送过于频繁，请稍后再试` |
 | Die Einheit, die skaliert | **ein Konto = ein Schlüssel = ein Exit** (mit einem Pool; ein direkter Lauf erzeugt einen pro Tag) |
@@ -64,14 +64,14 @@ node src/cli.js --verify-only     # every key in keys.txt is re-tested with a re
 
 ## 🤖 Modelle — alle 141 davon
 
-Der öffentliche Katalog enthält **141 Modelleinträge in 88 Gruppen** über 5 Kategorien (chat / image / video / audio / video-enhance). Die verifizierte Schlüsselzeile ist die Flash-Familie von DeepSeek:
+Der öffentliche Katalog enthält **141 Modelleinträge in 88 Gruppen** über 5 Kategorien (Chat / Bild / Video / Audio / Video-Enhance). Die verifizierte Schlüsselzeile ist die Flash-Familie von DeepSeek:
 
 | Modell-ID | Verifiziert |
 | --- | --- |
-| `deepseek-v4.1-flash-1017` | **10 Schlüssel chat-200** in `providers/whatstoken/keys.txt`; vollständiger Durchlauf aus einem zweiten Netzwerk (siehe Verifiziert-Tabelle) |
+| `deepseek-v4.1-flash-1017` | **jeder Schlüssel, chat-200** in `providers/whatstoken/keys.txt`; vollständiger Durchlauf aus einem zweiten Netzwerk (siehe die Verifiziert-Tabelle) |
 | `deepseek-v4.1-flash-1017-special` | chat-200 mit denselben Schlüsseln (das rabattierte Geschwistermodell) |
 
-Upstream antwortet mit der internen ID `deepseek-v4-1-flash-261017`, daher sollte ein Router, der Aliase zusammenführt, beide zurück auf die Basis-Familie `deepseek-v4.1-flash` abbilden.
+Upstream antwortet mit der internen ID `deepseek-v4-1-flash-261017`, daher sollte ein Router, der Aliase zusammenführt, beide auf die Basis-Familie `deepseek-v4.1-flash` zurückführen.
 
 ```bash
 curl https://www.whatstoken.ai/v1/chat/completions \
@@ -81,7 +81,7 @@ curl https://www.whatstoken.ai/v1/chat/completions \
 
 ## 🧪 So verwendest du die API
 
-Basis-URL **`https://www.whatstoken.ai/v1`** — OpenAI-kompatibel. Das Apex `whatstoken.ai` leitet nur weiter (`301`) und `api.whatstoken.ai` löst nicht auf, behalte also den `www`-Host in deinem Client.
+Basis-URL **`https://www.whatstoken.ai/v1`** — OpenAI-kompatibel. Die Apex-Domain `whatstoken.ai` leitet nur weiter (`301`) und `api.whatstoken.ai` löst nicht auf, behalte also den `www`-Host in deinem Client.
 
 ```python
 from openai import OpenAI
@@ -100,11 +100,11 @@ node src/launcher.js        # interactive: mint / verify / screen / settings / 9
 # or: node src/cli.js --count 30 --pool proxies.txt
 ```
 
-Ein Schlüssel wird **nur** dann in `keys.txt` geschrieben, wenn `/v1/chat/completions` mit 200 und echtem Inhalt oder Reasoning-Inhalt antwortet; `accounts.jsonl` behält E-Mail / Passwort / uid / Token-ID / Geschenkguthaben / Exit / Modell, und abgelehnte Versuche behalten ihren Grund.
+Ein Schlüssel wird **nur** dann in `keys.txt` geschrieben, wenn `/v1/chat/completions` mit 200 und echtem Inhalt oder Reasoning-Inhalt antwortet; `accounts.jsonl` speichert E-Mail / Passwort / UID / Token-ID / Geschenkguthaben / Exit / Modell, und abgelehnte Versuche behalten ihren Grund.
 
 ### 🖱️ Der Launcher
 
-Der Launcher fragt nach der Proxy-Liste und der Anzahl, merkt sie sich in `launcher.config.json` und führt die CLI aus — mint, verify, screen exits, settings, help, Connect to 9Router.
+Der Launcher fragt nach der Proxy-Liste und der Anzahl, merkt sie sich in `launcher.config.json` und führt die CLI aus — Mint, Verify, Exits screenen, Settings, Hilfe, Connect to 9Router.
 
 ## ✅ Verifiziert funktionierend — jeder Schlüssel wird getestet
 
@@ -114,9 +114,16 @@ Der Launcher fragt nach der Proxy-Liste und der Anzahl, merkt sie sich in `launc
 | `POST /api/v1/auth/send-code` | **200** — das Panel mailt `【WhatsToken.AI】注册验证码` von `noreply@<panel-mail>` innerhalb von ~5–10 s (5 Minuten Lebensdauer) |
 | `POST /api/v1/auth/register-email` | **200** — Session-Token in derselben Antwort; `403 当日注册次数已达上限`, sobald diese IP ihre tägliche Anmeldung hatte |
 | `POST /api/v1/tokens` | **200** — der Schlüssel kommt als `token_key` zurück (nicht `key`), unbegrenztes Kontingent |
-| `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — für **jeden** Schlüssel, bevor er geschrieben wird | **200** mit echtem Inhalt — der 10-Schlüssel-Mint wurde mit 10/10 abgeschlossen |
-| unabhängige Nachprüfung — **10/10 Schlüssel live** von einem anderen Exit (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | alle zehn Schlüssel PASS; das Geschwistermodell `-special` antwortet ebenfalls mit 200 |
+| `POST /v1/chat/completions` (`deepseek-v4.1-flash-1017`) — für **jeden** Schlüssel, bevor er geschrieben wird | **200** mit echtem Inhalt — der 10-Schlüssel-Mint schloss mit 10/10 ab |
+| unabhängige Nachprüfung — **jeder Schlüssel verifiziert** von einem anderen Exit (`--verify-only`, `deepseek-v4.1-flash-1017`, 2026-10-20) | alle zehn Schlüssel PASS; das Geschwistermodell `-special` antwortet ebenfalls mit 200 |
 | Hinweise von der Panel-Seite | Registrierungen sind **pro IP pro Tag** begrenzt; ein falscher/abgelaufener Code verbrennt zuerst die Adresse (`400 邮箱验证码无效`), nicht den Exit |
+
+> **Qualitätsgates.** Jeder Schlüssel hier hat ein Live-`chat-200` bestanden, bevor er in `keys.txt`
+> geschrieben wurde (tote Schlüssel werden nie ausgeliefert). Router-Kombinationen folgen derselben Regel
+> auf Modellebene: Ein Eintrag wird **nur hinzugefügt, wenn das Modell `chat-200` antwortet und Tools
+> aufrufen kann** — ein Modell ohne Tool-Unterstützung, ein toter Schlüssel oder ein toter Anbieter wird
+> verworfen statt hinzugefügt. Führe den Verify-Schritt jederzeit erneut aus;
+> Fehler werden gemeldet, nie versteckt.
 
 ## 🧭 So funktioniert es
 
@@ -131,10 +138,10 @@ inbox (one address per account)                                  a fresh address
 
 | Schritt | Aufruf | Hinweise |
 | --- | --- | --- |
-| Gates | `GET /api/v1/settings` | Registrierungs-/Marketing-Schalter, keine Auth |
+| Gates | `GET /api/v1/settings` | Registrierungs-/Marketing-Schalter, keine Authentifizierung |
 | Postfach | Emailnator `POST /api/generate-email` | eine frische @gmail.com pro Konto, in der punktfreien Form registriert |
 | Code senden | `POST /api/v1/auth/send-code` `{email, purpose:'register'}` | Cooldown antwortet `验证码发送过于频繁` |
-| Code lesen | Emailnator `/api/message-list` → `/api/message/<id>` | Marke zuerst (`WhatsToken`/`reanimai`), dann eine code-förmige Ankunft aus dem Snapshot |
+| Code lesen | Emailnator `/api/message-list` → `/api/message/<id>` | Marke zuerst (`WhatsToken`/`reanimai`), dann eine codeförmige Ankunft aus dem Snapshot |
 | Registrieren | `POST /api/v1/auth/register-email` `{email, code, password, timezone}` | `409 CONTACT_AT_LIMIT` → neue Adresse, gleicher Exit; `403 当日注册次数已达上限` → nächster Exit |
 | Schlüssel | `POST /api/v1/tokens` | unbegrenztes Kontingent; Antwortfeld `token_key` |
 | Beweis | `POST /v1/chat/completions` | 200 mit Inhalt/Reasoning-Inhalt = der Schlüssel ist live |
@@ -161,18 +168,18 @@ Die CLI behält `--conc` der Vollständigkeit halber bei, verwendet aber standar
 
 **Optional — aber der Anbieter macht es in jedem Maßstab nahezu zwingend.** Das Tool funktioniert auch ohne Proxy.
 
-- **Mit einem Pool:** übergib `--pool <file>` (oder setze `WHATSTOKEN_PROXIES`) und jede Anfrage für ein Konto — send-code, register, wallet, key, chat-200 — geht durch einen fest zugewiesenen Exit aus dieser Liste, sodass der Code nie von einer Adresse ausgegeben und von einer anderen eingelöst wird. Ein fehlgeschlagener Exit verschiebt den Versuch auf den nächsten; ein Exit, der `403 当日注册次数已达上限` meldet, wird für den Rest des Laufs verbrannt. Mit einem Pool ist der Lauf **fail-closed**: Wenn kein Exit das Panel erreicht, schlägt der Lauf fehl, statt eine Anfrage von deiner eigenen Adresse durchsickern zu lassen.
-- **Ohne einen Pool:** die CLI gibt `running WITHOUT a proxy (direct)` aus und verbindet direkt — und dann bedeutet WhatsTokenAIs Regel von einer Anmeldung pro IP pro Tag, dass ein direkter Lauf **einen** Schlüssel erzeugt.
-- Führe `--screen` gegen beide Modi aus: Es testet die Exits, die du hast (oder die direkte Route) gegen `GET /api/v1/settings`, bevor ein echter Lauf startet.
+- **Mit einem Pool:** Übergib `--pool <file>` (oder setze `WHATSTOKEN_PROXIES`), und jede Anfrage für ein Konto — send-code, register, wallet, key, chat-200 — läuft über einen fest zugewiesenen Exit aus dieser Liste, sodass der Code nie von einer Adresse ausgegeben und von einer anderen eingelöst wird. Ein fehlgeschlagener Exit verschiebt den Versuch auf den nächsten; ein Exit, der `403 当日注册次数已达上限` meldet, wird für den Rest des Laufs verbrannt. Mit einem Pool ist der Lauf **fail-closed**: Wenn kein Exit das Panel erreicht, schlägt der Lauf fehl, statt eine Anfrage von deiner eigenen Adresse durchsickern zu lassen.
+- **Ohne einen Pool:** Die CLI gibt `running WITHOUT a proxy (direct)` aus und verbindet direkt — und dann bedeutet WhatsTokenAIs Regel „eine Anmeldung pro IP pro Tag“, dass ein direkter Lauf **einen** Schlüssel erzeugt.
+- Führe `--screen` gegen beide Modi aus: Es testet die Exits, die du hast (oder die direkte Route), gegen `GET /api/v1/settings`, bevor ein echter Lauf startet.
 
 ## 📄 Dateien
 
 | Pfad | Inhalt |
 | --- | --- |
-| `keys.txt` | ein live-verifizierter Schlüssel pro Zeile — von git ignoriert |
-| `accounts.jsonl` | E-Mail / Passwort / uid / Token-ID / Geschenkguthaben / Exit / Modell / Gate — von git ignoriert |
-| `proxies.txt` | deine Exits — von git ignoriert |
-| `out/` | Lauf-Logs — von git ignoriert |
+| `keys.txt` | ein live-verifizierter Schlüssel pro Zeile — von Git ignoriert |
+| `accounts.jsonl` | E-Mail / Passwort / UID / Token-ID / Geschenkguthaben / Exit / Modell / Gate — von Git ignoriert |
+| `proxies.txt` | deine Exits — von Git ignoriert |
+| `out/` | Lauf-Logs — von Git ignoriert |
 
 ## 🔌 Mit 9Router verbinden
 
@@ -195,6 +202,7 @@ node src/cli.js --connect-omniroute      # same, from the CLI
 ```
 
 Standardwerte: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`, `--model deepseek-v4.1-flash-1017`. Modelle werden als `whatstoken/<model id>` bereitgestellt.
+
 ## 🔑 Was ein Schlüssel dir bringt
 
 | | |
@@ -207,7 +215,7 @@ Standardwerte: `--prefix whatstoken`, `--base-url https://www.whatstoken.ai/v1`,
 
 ## 🐞 Probleme
 
-Wenn WhatsTokenAI seine Registrierungs-Gates, seine Adressrichtlinie oder das Anmeldegeschenk ändert, stoppt das Tool an diesem Schritt und sagt, an welchem. **[Öffne ein Issue](../../issues)** mit dem Befehl und der exakten Ausgabe.
+Wenn WhatsTokenAI seine Registrierungs-Gates, seine Adressrichtlinie oder das Anmeldegeschenk ändert, stoppt das Tool an diesem Schritt und sagt, welcher es ist. **[Öffne ein Issue](../../issues)** mit dem Befehl und der exakten Ausgabe.
 
 ## 📄 Lizenz
 
