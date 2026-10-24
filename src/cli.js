@@ -43,7 +43,7 @@
  *   --gap MS         pause between accounts                             [2000]
  *   --model <id>     model used for the live gate    [deepseek-v4.1-flash-1017]
  *   --pool <file>    proxy list, one exit per line (env WHATSTOKEN_PROXIES) [optional]
- *   --tries N        exits tried per account before giving up              [3]
+ *   --exits N        exits tried per account before giving up              [6]
  *   --addr-tries N   addresses tried per exit (409/400 address cases)      [4]
  *   --timeout MS     per-request timeout                               [60000]
  *   --verify-only    re-run every key in keys.txt through the chat gate
@@ -117,7 +117,7 @@ successful registration per IP per day, so a direct run mints at most one key.`)
 const COUNT = Math.max(1, parseInt(arg('count', '5'), 10) || 5);
 const CONC = Math.min(4, Math.max(1, parseInt(arg('conc', '1'), 10) || 1));
 const GAP_MS = Math.max(0, parseInt(arg('gap', '2000'), 10) || 0);
-const TRIES = Math.max(1, parseInt(arg('tries', '3'), 10) || 3);
+const EXITS = Math.max(1, parseInt(arg('exits', '6'), 10) || 6);
 const ADDR_TRIES = Math.max(1, parseInt(arg('addr-tries', '4'), 10) || 4);
 const TIMEOUT_MS = Math.max(5000, parseInt(arg('timeout', '60000'), 10) || 60000);
 const MODEL = arg('model', 'deepseek-v4.1-flash-1017');
@@ -283,6 +283,15 @@ function loadExits() {
   }
   return exits;
 }
+/** A dead exit, not a panel verdict — the flow rotates to the next candidate. */
+const isExitError = (e) =>
+  /proxy connect failed|proxy CONNECT refused|proxy timeout|connect timeout|connect failed|ETIMEDOUT|ECONNREFUSED|ECONNRESET|ECONNABORTED|EPIPE|ENETUNREACH|EHOSTUNREACH|EAI_AGAIN|socket hang up|secureConnect|TLS|handshake/i.test(
+    String((e && e.message) || e),
+  );
+
+/** `host:port` of the exit in play, or `direct` when the pool is empty. */
+const exitLabel = (e) => (e ? `${e.host}:${e.port}` : 'direct');
+
 
 async function screen(exits) {
   let ok = 0;
@@ -363,7 +372,7 @@ async function pollCode(exit, box, baseline, { timeoutMs = 150000, pollMs = 5000
       const head = `${m.from || ''} ${m.subject || ''}`;
       if (!BRAND.test(head) && !CODE_WORDS.test(head)) continue;
       const r = await exitJson(exit, `${EMAILNATOR}/api/message/${encodeURIComponent(id)}`).catch(() => null);
-      const html = r ? r.body : '';
+      const html = r ? String(r.text || '') : '';
       const code = extractCode(m.subject, stripTags(html), html);
       if (!code) continue;
       if (BRAND.test(head)) return code;
@@ -472,16 +481,20 @@ async function mint() {
   if (SCREEN) return void (await screen(exits));
   log(`whatstoken · ${COUNT} key(s) · conc ${CONC} · exits ${exits.filter(Boolean).length || 'direct'} · keys land in ${KEYS_FILE}`);
   let made = 0;
+  const routes = exits[0] === null ? 1 : EXITS;
+  let transportDead = 0;
   for (let i = 0; i < COUNT; i += CONC) {
     const jobs = [];
     for (let k = 0; k < CONC && i + k < COUNT; k++) {
       const index = i + k;
       jobs.push((async () => {
         let lastErr = null;
-        for (let t = 0; t < TRIES; t++) {
+        let lastWasExit = false;
+        for (let a = 0; a < routes; a++) {
           const pool = exits.filter((e) => !burnedExits.has(e ? e.line : 'direct'));
           if (!pool.length) { lastErr = new Error('every exit in the pool has spent its daily registration'); break; }
-          const exit = pool[(index + t) % pool.length];
+          const exit = pool[(index + a) % pool.length];
+          lastWasExit = false;
           try {
             const rec = await signUp(exit);
             let live = null;
@@ -507,9 +520,15 @@ async function mint() {
             return;
           } catch (e) {
             lastErr = e;
+            lastWasExit = isExitError(e);
+            if (lastWasExit) {
+              const where = exit ? `exit ${a + 1}/${routes} ${exitLabel(exit)}` : `direct attempt ${a + 1}/${routes}`;
+              log(`account ${index + 1}: ${where} dead (${String(e.message).slice(0, 70)})${exit ? ' → next exit' : ''}`);
+            }
             if (e.message === 'EXIT_USED') { burnedExits.add(exit ? exit.line : 'direct'); log(`exit ${exit ? `${exit.host}:${exit.port}` : 'direct'} — daily registration cap reached, next exit`); }
           }
         }
+        if (lastWasExit) transportDead++;
         log(`account ${index + 1}: ${lastErr ? String(lastErr.message).slice(0, 140) : 'failed'}`);
       })());
     }
@@ -517,6 +536,11 @@ async function mint() {
     if (GAP_MS) await sleep(GAP_MS);
   }
   log(`done — ${made}/${COUNT} key(s) written to ${KEYS_FILE}`);
+  if (!made && transportDead === COUNT) {
+    const route = exits[0] === null ? 'direct mode (no proxy list)' : `${exits.length}-exit pool`;
+    console.error(`[fatal] no usable route — ${COUNT} account(s) × ${routes} candidate(s) over ${route}: every attempt died at the transport layer.`);
+    process.exit(1);
+  }
   if (made < COUNT) process.exitCode = 1;
 }
 
